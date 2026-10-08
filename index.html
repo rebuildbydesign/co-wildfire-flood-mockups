@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colorado Map Mockups</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="rule"></div>
+  <h1 class="page">Colorado Wildfire + Flood Map: mockups</h1>
+  <p class="lede big">This page shows what the finished Colorado map should look like, so the mapping team is building toward the same thing. It's adapted from Rebuild's <a href="https://rebuildbydesign.github.io/nj-flood-risk/">NJ Underwater map</a>.</p>
+  <p class="lede">We can get to these screens. Whether the numbers on them are right depends on the data underneath. Every file the map reads has to be clean and checked before it goes on the map, and that's most of the work ahead.</p>
+  <nav class="parts" aria-label="On this page">
+    <a href="#target"><b>Part 1</b><span>The target: four screens</span></a>
+    <a href="#data"><b>Part 2</b><span>How we get there: clean data</span></a>
+    <a href="#guard"><b>Part 3</b><span>What's in, what's out</span></a>
+  </nav>
+  <div class="howto">
+    <h2>How to read the screens</h2>
+    <div class="hzkey">
+      <span style="--c:var(--flood)">Flood today</span>
+      <span style="--c:var(--fire)">Wildfire today</span>
+      <span style="--c:var(--f47)">Wildfire around 2047</span>
+      <span style="--c:var(--both)">Flood x wildfire today</span>
+    </div>
+    <div class="key">
+      <span>Each hazard keeps its colour everywhere: buttons, map, popup, bars.</span>
+      <span><span class="pin-key">1</span> Yellow pins match a row in the table under each screen.</span>
+      <span><span class="chip-sample">SAMPLE</span> Placeholder number, not a finding.</span>
+    </div>
+  </div>
+</header>
+
+<div class="part" id="target"><b>Part 1</b><h2>The target</h2><p>Four screens of one tool. The switch in Step 1 changes what the numbers add up to: a county, a town or a legislative district. The popup is the same every time.</p></div>
+
+<!-- ================= 1 ON LOAD ================= -->
+<section class="design" id="onload">
+  <div class="design-head">
+    <h2>1 · The map on load</h2>
+    <p>Statewide, counties shaded. Click the hazard buttons: the shading and the gap patterns change with them.</p>
+  <p class="reads">Reads: <code>co_county_popup.geojson</code></p></div>
+  <div class="stage-box"><div class="stage" id="stage1">
+    <div class="stamp">SAMPLE SHADING</div>
+    <aside class="sb" data-view="County" data-sel="Select a County" data-hz="both" data-live="1" data-intro="Intro text goes here: how many properties were analyzed and why it matters." data-fac="1"></aside>
+    <div class="mapbg"></div>
+    <div class="logo">REBUILD<br>BY<br>DESIGN</div>
+    <svg id="state" style="position:absolute;left:330px;top:150px;width:720px;height:527px;z-index:1" viewBox="0 0 820 600" aria-label="Colorado counties">
+      <defs>
+        <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#26292b"/><line x1="0" y1="0" x2="0" y2="7" stroke="#6d7275" stroke-width="2"/></pattern>
+        <pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.3" fill="#a5d5f1"/></pattern>
+      </defs>
+      <g id="cfill"></g><g id="cover"></g><g id="clab"></g>
+    </svg>
+    <div class="card">
+      <div class="lab">Key finding</div>
+      <div class="ph" style="font-size:13.5px">One topline number goes here once the analysis is done. For example, how many public assets sit in high wildfire or flood risk areas.</div>
+    </div>
+    <div class="legend" id="legend1"></div>
+    <div class="info">i</div>
+    <div class="pin" style="left:286px;top:12px">1</div>
+    <div class="pin" style="left:286px;top:150px">2</div>
+    <div class="pin" style="left:286px;top:356px">3</div>
+    <div class="pin" style="left:286px;top:592px">4</div>
+    <div class="pin" style="left:690px;top:330px">5</div>
+    <div class="pin" style="left:648px;top:600px">6</div>
+    <div class="pin" style="left:1088px;top:110px">7</div>
+    <div class="pin" style="left:1362px;top:770px">8</div>
+  </div></div>
+  <div class="notes"><table class="n">
+    <thead><tr><th>#</th><th>On screen</th><th>Where it comes from</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pin-key">1</span></td><td>Title and intro</td><td>Written last, once we know the numbers.</td></tr>
+      <tr><td><span class="pin-key">2</span></td><td>Find a place</td><td>The County / Town / House / Senate switch picks which boundary the numbers add up to. The dropdown and search follow it. See "How one tool works" below.</td></tr>
+      <tr><td><span class="pin-key">3</span></td><td>Four hazards, one at a time</td><td><b style="color:var(--flood-lite)">Flood today</b>: FEMA 100-year floodplain, high risk = 50%+ of the parcel inside it (<code>perc_flood_100yr</code>). <b style="color:var(--fire-lite)">Wildfire today</b>: state Wildfire Resiliency Code hexagons (<code>wildfire_class</code>, <code>perc_wildfire_high</code>). <b style="color:var(--f47-lite)">Wildfire around 2047</b>: Forest Service burn probability (<code>bp_2011</code>, <code>bp_2047</code>). <b style="color:var(--both-lite)">Flood x wildfire today</b>: parcels that are high risk for both flood and wildfire today.</td></tr>
+      <tr><td><span class="pin-key">4</span></td><td>Public assets</td><td>Public point layers: schools, fire stations, dams and so on. Off on load, so the hazard shading reads first.</td></tr>
+      <tr><td><span class="pin-key">5</span></td><td>County shading</td><td>Share of a county's properties at high risk for the picked hazard, in that hazard's colour. Zooming in swaps counties for parcels (screen 3).</td></tr>
+      <tr><td><span class="pin-key">6</span></td><td>Data gaps</td><td>Real lists. Grey hatch: the 20 counties with no state parcel data. Blue dots: the 19 counties with no digital FEMA flood map, shown for the two flood hazards. A gap is never shown as zero risk.</td></tr>
+      <tr><td><span class="pin-key">7</span></td><td>Key finding</td><td>Comes out of the analysis. Same card as NJ.</td></tr>
+      <tr><td><span class="pin-key">8</span></td><td>Methodology</td><td>A short methods note and a source table, like NJ's.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= 2 COUNTY ================= -->
+<section class="design" id="county">
+  <div class="design-head">
+    <h2>2 · County: Boulder</h2>
+    <p>Switch on County, Boulder picked. Behind the popup: Boulder's real FEMA 100-year floodplain and the state's moderate and high wildfire hexagons.</p>
+  <p class="reads">Reads: <code>co_county_popup.geojson</code> · <code>co_public_assets.geojson</code></p></div>
+  <div class="stage-box"><div class="stage">
+    <div class="stamp">SAMPLE NUMBERS</div>
+    <aside class="sb" data-view="County" data-sel="Boulder County" data-hz="both"></aside>
+    <div class="mapbg"></div>
+    <svg id="zoom" style="position:absolute;left:300px;top:130px;width:360px;height:472px" viewBox="320 60 450 590" aria-label="Western Boulder County flood and wildfire"><g id="z"></g></svg>
+    <div class="logo">REBUILD<br>BY<br>DESIGN</div>
+    <div class="legend" style="width:300px">
+      <div class="t">Western Boulder County, real layers</div>
+      <div class="lg-row"><svg width="16" height="12"><rect width="16" height="12" fill="#3a7fc3"/></svg>FEMA 100-year floodplain</div>
+      <div class="lg-row"><svg width="16" height="12"><rect width="16" height="12" fill="#f27407" opacity=".85"/></svg>Wildfire today: high (state hexagons)</div>
+      <div class="lg-row"><svg width="16" height="12"><rect width="16" height="12" fill="#f27407" opacity=".35"/></svg>Wildfire today: moderate</div>
+    </div>
+    <div class="pop" id="pop-county"></div>
+    <div class="info">i</div>
+    <div class="pin" style="left:642px;top:40px">1</div>
+    <div class="pin" style="left:642px;top:140px">2</div>
+    <div class="pin" style="left:642px;top:500px">3</div>
+    <div class="pin" style="left:1398px;top:40px">4</div>
+    <div class="pin" style="left:1398px;top:600px">5</div>
+    <div class="pin" style="left:316px;top:676px">6</div>
+  </div></div>
+  <div class="notes"><table class="n">
+    <thead><tr><th>#</th><th>On screen</th><th>Where it comes from</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pin-key">1</span></td><td>Header</td><td>Property count after Parcel Base cleanup, then high risk of any hazard with each property counted once.</td></tr>
+      <tr><td><span class="pin-key">2</span></td><td>One box per hazard</td><td>Same order and colours as the buttons. Each box has the same four numbers in the same spots: properties, value (<code>actual_value</code>), est. tax (value × assessment rate × (school + local mills) ÷ 1000) and est. residents. Residents are only an estimate: Census counts people by block, not parcel, so each block's population is spread across its parcels (the NJ method). Always labelled "est." No displacement groups.</td></tr>
+      <tr><td><span class="pin-key">3</span></td><td>Wildfire around 2047</td><td>A yearly chance of burning, compared within the same Forest Service dataset (about 2011 vs about 2047), so it shows different numbers from the other boxes.</td></tr>
+      <tr><td><span class="pin-key">4</span></td><td>Public assets</td><td>Four bars per asset type, one per hazard. Only types with at least one at risk are listed, sorted by "both" first.</td></tr>
+      <tr><td><span class="pin-key">5</span></td><td>By town</td><td>Each town plus Unincorporated, so properties outside towns are counted too.</td></tr>
+      <tr><td><span class="pin-key">6</span></td><td>Map behind the popup</td><td>Real FEMA 100-year floodplain and state wildfire hexagons.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= 3 TOWN ================= -->
+<section class="design" id="town">
+  <div class="design-head">
+    <h2>3 · Town: Jamestown</h2>
+    <p>Switch on Town. Same popup, smaller boundary. Zoomed in, the map shows parcels instead of counties. Jamestown sits in a canyon with a creek, under burnable hillsides, which is what "flood x wildfire" is about.</p>
+  <p class="reads">Reads: <code>co_town_popup.geojson</code> · <code>parcel tiles</code> · <code>co_public_assets.geojson</code></p></div>
+  <div class="stage-box"><div class="stage">
+    <div class="stamp">SAMPLE NUMBERS</div>
+    <aside class="sb" data-view="Town" data-sel="Jamestown (Boulder County)" data-hz="both"></aside>
+    <div class="mapbg"></div>
+    <svg id="townmap" style="position:absolute;left:300px;top:0;width:354px;height:810px" viewBox="0 0 760 640" preserveAspectRatio="xMidYMid slice" aria-label="Jamestown parcels by hazard"><g id="tm"></g></svg>
+    <div class="logo">REBUILD<br>BY<br>DESIGN</div>
+    <div class="legend" style="width:300px">
+      <div class="t">Jamestown parcels, real shapes</div>
+      <div class="lg-row"><svg width="16" height="12"><rect width="16" height="12" fill="#8b5cf6"/></svg>Flood x wildfire (both)</div>
+      <div class="lg-row"><svg width="16" height="12"><rect width="16" height="12" fill="#3a7fc3" opacity=".55"/></svg>Flood only</div>
+      <div class="lg-row"><svg width="16" height="12"><rect width="16" height="12" fill="#f27407" opacity=".4"/></svg>Wildfire only</div>
+      <div class="lg-row"><svg width="16" height="12"><rect width="16" height="12" fill="#4a4f53"/></svg>Neither</div>
+    </div>
+    <div class="pop" id="pop-town"></div>
+    <div class="info">i</div>
+    <div class="pin" style="left:286px;top:150px">1</div>
+    <div class="pin" style="left:642px;top:40px">2</div>
+    <div class="pin" style="left:642px;top:560px">3</div>
+    <div class="pin" style="left:1398px;top:40px">4</div>
+    <div class="pin" style="left:316px;top:640px">5</div>
+  </div></div>
+  <div class="notes"><table class="n">
+    <thead><tr><th>#</th><th>On screen</th><th>Where it comes from</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pin-key">1</span></td><td>Town switch</td><td>Dropdown lists every town, plus one "Unincorporated" area per county (for example, Unincorporated Boulder County).</td></tr>
+      <tr><td><span class="pin-key">2</span></td><td>Header</td><td>County, House and Senate district come straight from the Parcel Base columns.</td></tr>
+      <tr><td><span class="pin-key">3</span></td><td>Same hazard boxes</td><td>Identical component to the county popup.</td></tr>
+      <tr><td><span class="pin-key">4</span></td><td>Public assets</td><td>Same component, smaller counts.</td></tr>
+      <tr><td><span class="pin-key">5</span></td><td>Parcels on the map</td><td>Real Jamestown parcel shapes coloured by hazard. At town zoom this replaces the county shading.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= 4 HOUSE DISTRICT ================= -->
+<section class="design" id="district">
+  <div class="design-head">
+    <h2>4 · House District 49</h2>
+    <p>Switch on House. Same popup again, now naming who represents the district and which counties it covers. Jamestown sits inside this district. Senate works the same way.</p>
+  <p class="reads">Reads: <code>co_house_popup.geojson</code> · <code>co_public_assets.geojson</code></p></div>
+  <div class="stage-box"><div class="stage">
+    <div class="stamp">SAMPLE NUMBERS</div>
+    <aside class="sb" data-view="House" data-sel="House District 49" data-hz="both"></aside>
+    <div class="mapbg"></div>
+    <svg id="hdmap" style="position:absolute;left:310px;top:150px;width:330px;height:257px" viewBox="0 0 900 700" aria-label="House District 49"><g id="hm"></g></svg>
+    <div class="logo">REBUILD<br>BY<br>DESIGN</div>
+    <div class="legend" style="width:300px">
+      <div class="t">Share of properties at high risk of flood x wildfire</div>
+      <div class="ramp"><div style="background:#241a33"></div><div style="background:#46306b"></div><div style="background:#6f4bb0"></div><div style="background:#a98bf0"></div></div>
+      <div class="ramp-l"><span>0%</span><span>1%</span><span>3%</span><span>5%+</span></div>
+      <div class="lg-row"><svg width="16" height="12"><rect width="16" height="12" fill="none" stroke="#fff" stroke-width="3"/></svg>House District 49</div>
+      <div class="lg-row"><svg width="16" height="12"><line x1="0" y1="6" x2="16" y2="6" stroke="#ddd" stroke-dasharray="3 2"/></svg>County lines inside the district</div>
+    </div>
+    <div class="pop" id="pop-hd"></div>
+    <div class="info">i</div>
+    <div class="pin" style="left:286px;top:150px">1</div>
+    <div class="pin" style="left:642px;top:40px">2</div>
+    <div class="pin" style="left:642px;top:150px">3</div>
+    <div class="pin" style="left:1398px;top:560px">4</div>
+    <div class="pin" style="left:316px;top:640px">5</div>
+  </div></div>
+  <div class="notes"><table class="n">
+    <thead><tr><th>#</th><th>On screen</th><th>Where it comes from</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pin-key">1</span></td><td>House switch</td><td>Dropdown lists all 65 House districts. The Senate switch works the same way for all 35 Senate districts.</td></tr>
+      <tr><td><span class="pin-key">2</span></td><td>Header</td><td>District number and representative from the state's House Members layer. Counties covered come from the district's parcels.</td></tr>
+      <tr><td><span class="pin-key">3</span></td><td>Same hazard boxes</td><td>Identical component again. A district can cross county lines, so its numbers are added up from parcels, never from county totals.</td></tr>
+      <tr><td><span class="pin-key">4</span></td><td>By county</td><td>Where the district's at-risk properties are, county by county. Useful for a legislator whose district spans mountain and Front Range counties.</td></tr>
+      <tr><td><span class="pin-key">5</span></td><td>District map</td><td>Real 2021 House district lines, shaded by the picked hazard (sample shading).</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= HOW ONE TOOL WORKS ================= -->
+<section class="design" id="onetool">
+  <div class="design-head">
+    <h2>How one tool works</h2>
+    <p>One parcel file, one popup. Every parcel already carries its county, town and both districts, so the switch only changes which boundary the numbers add up to.</p>
+  </div>
+  <div class="flow">
+    <div><b>County</b><span>64 counties. 20 have no state parcel data.</span></div>
+    <div><b>Town</b><span>273 towns, plus one Unincorporated area per county.</span></div>
+    <div><b>House</b><span>65 districts, with the representative's name.</span></div>
+    <div><b>Senate</b><span>35 districts, same layout as House.</span></div>
+  </div>
+  <div class="rules">
+    <div><h3>Unincorporated gets its own area</h3><p>Each county has a clickable "Unincorporated" area, so properties outside towns have somewhere to show up in the Town view.</p></div>
+    <div><h3>Towns across county lines</h3><p>A town's popup shows the whole town (Erie is in Boulder and Weld). Each county total only counts its own part.</p></div>
+    <div><h3>One parcel, one place</h3><p>Each parcel is assigned by its inside point, so it lands in exactly one town and one district. Nothing is counted twice.</p></div>
+  </div>
+</section>
+
+<!-- ================= GAPS ================= -->
+<section class="design" id="gaps">
+  <div class="design-head">
+    <h2>Same popup, county with gaps</h2>
+    <p>Kiowa County has no state parcel data and no digital FEMA flood map. The popup says so in words instead of showing zeros.</p>
+  </div>
+  <div class="pair">
+    <div class="gap-pop">
+      <div class="ch"><div class="k">County</div><div class="n">KIOWA COUNTY</div><div class="s">No property data from the state</div></div>
+      <div class="gaprow"><span style="color:var(--flood-lite)">Flood today</span><b>No digital FEMA flood map</b></div>
+      <div class="gaprow"><span style="color:var(--fire-lite)">Wildfire today</span><b>Shown on the map, not counted</b></div>
+      <div class="gaprow"><span style="color:var(--f47-lite)">Wildfire around 2047</span><b>Shown on the map, not counted</b></div>
+      <div class="gaprow"><span style="color:var(--both-lite)">Flood x wildfire today</span><b>No digital FEMA flood map</b></div>
+      <div class="gaprow"><span>Public assets</span><b style="color:#fff;font-style:normal;font-weight:700">Still counted for wildfire</b></div>
+      <div class="foot">Public assets come from point layers, not parcels, so they can be checked against wildfire here even without parcel data.</div>
+    </div>
+    <div class="gaplist">
+      <div><h3>No state parcel data <span>20 counties</span></h3><p>Alamosa, Baca, Bent, Chaffee, Cheyenne, Conejos, Costilla, Crowley, Delta, Fremont, Jackson, Kiowa, Kit Carson*, Las Animas, Lincoln, Mineral, Montrose, Otero, Phillips, Prowers</p></div>
+      <div><h3>No digital FEMA flood map <span>19 counties</span></h3><p>Alamosa, Baca, Bent, Cheyenne, Conejos, Costilla, Crowley, Custer, Dolores, Huerfano, Jackson, Kiowa, Kit Carson, Lake, Moffat, Otero, Phillips, San Miguel, Yuma</p></div>
+      <div><h3>Parcels but no values <span>4 counties</span></h3><p>Custer, Gunnison, Ouray, San Miguel. Popup shows counts and est. residents, and "no value data" for value and tax.</p></div>
+      <p class="note">*Kit Carson is in the state zip as its own layer, so it may come off this list.</p>
+    </div>
+  </div>
+</section>
+
+<div class="part" id="data"><b>Part 2</b><h2>How we get there</h2><p>Each step makes one file. Each file passes its checks before the next step uses it. The map itself never does any math: it only shows numbers that were worked out and checked upstream.</p></div>
+
+<section class="design">
+  <div class="design-head"><h2>The steps</h2><p>Left to right. Each step makes one file.</p></div>
+  <ol class="pipe">
+    <li style="--c:var(--ok)"><b>1 · Raw downloads</b><span>Parcels, values, census blocks, boundaries. Kept unchanged.</span><code>Shapefiles &amp; JSONS/</code></li>
+    <li style="--c:var(--rbd-yellow)"><b>2 · Parcel Base</b><span>One clean row per property, with its value, census block, town, House and Senate district.</span><code>co_parcel_base.gpkg</code></li>
+    <li style="--c:var(--flood)"><b>3a · Flood x parcel</b><span>Share of each parcel in the FEMA 100-year floodplain.</span><code>co_flood_x_parcel.csv</code></li>
+    <li style="--c:var(--fire)"><b>3b · Wildfire x parcel</b><span>Today's state rating and the 2011 vs 2047 burn chance.</span><code>co_wildfire_x_parcel.csv</code></li>
+    <li style="--c:var(--both)"><b>4 · Public assets x hazards</b><span>Each school, fire station, dam and so on, flagged for each hazard.</span><code>co_public_assets.geojson</code></li>
+    <li style="--c:var(--co-accent)"><b>5 · Rollups</b><span>Totals by county, town, House and Senate district. Same fields in all four.</span><code>co_*_popup.geojson</code></li>
+    <li style="--c:#fff"><b>6 · The map</b><span>Reads only the files from steps 4 and 5, plus parcel tiles for zoomed-in views.</span><code>index.html</code></li>
+  </ol>
+</section>
+
+<section class="design">
+  <div class="design-head"><h2>What "clean" means</h2><p>Every file passes these before the next step uses it. Most data mistakes fail quietly: a broken step produces a normal-looking number, not an error.</p></div>
+  <div class="notes"><table class="n chk">
+    <thead><tr><th>Check</th><th>Why it matters</th><th>How to test</th></tr></thead>
+    <tbody>
+      <tr><td>One row per property</td><td>The same property can be listed once per co-owner or split into many shapes, each carrying the full value. Left in, they double count.</td><td><code>parcel_key</code> is unique. Duplicates = 0.</td></tr>
+      <tr><td>Rows add up</td><td>Every dropped or merged row should be explained, not lost.</td><td>Per county: downloaded − placeholders − repeats − merged pieces = final count.</td></tr>
+      <tr><td>Same parcels in every file</td><td>Flood and wildfire results have to line up with the Parcel Base, or totals drift between hazards.</td><td>Each hazard file has exactly the Parcel Base's <code>parcel_key</code>s. No rows gained or lost in the join.</td></tr>
+      <tr><td>Gaps stay blank, never 0</td><td>A 0 reads as "no risk". A county with no data isn't safe, it's unknown.</td><td>No county on the gap lists shows a 0. Missing values are blank, with a flag column saying why.</td></tr>
+      <tr><td>Numbers are numbers</td><td>Values come in as text. A number stored with a comma, like "93,911", can be read as 93.</td><td>Value columns are numeric. No commas or $ signs. Spot-check a few big ones by hand.</td></tr>
+      <tr><td>Shares stay between 0 and 1</td><td>A share above 1 or below 0 means the overlay went wrong.</td><td>All <code>perc_</code> columns are 0 to 1, two decimals, no blanks.</td></tr>
+      <tr><td>Every parcel lands somewhere</td><td>A parcel with no town or district disappears from those views.</td><td>Every row has a census block, a town (or Unincorporated), a House district and a Senate district.</td></tr>
+      <tr><td>Totals reconcile</td><td>The same properties are added up four ways. All four have to reach the same state total.</td><td>Towns + Unincorporated = county. Counties = state. House districts = state. Senate districts = state.</td></tr>
+      <tr><td>Join on ID and county, never name alone</td><td>Names are spelled differently across sources (TWP vs TOWNSHIP). A name-only join quietly drops rows and shows zeros.</td><td>Join on <code>parcel_key</code> (county code + account). Any name join also uses county.</td></tr>
+      <tr><td>Spot-check against the source</td><td>Code can be right and the overlay still wrong.</td><td>10 parcels per county, checked in the FEMA flood map viewer and the state wildfire map.</td></tr>
+      <tr><td>Ready for the web</td><td>The raw parcels have owner names and addresses, which never go public. Big files load slowly.</td><td>Web files in WGS84 (EPSG:4326), simplified shapes, no owner or address fields.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="design">
+  <div class="design-head"><h2>The files the map reads</h2><p>One popup file per view, all with the same fields, so the same popup works everywhere. Same idea as NJ's <code>county_popup.geojson</code>.</p></div>
+  <div class="notes"><table class="n files">
+    <thead><tr><th>File</th><th>One row per</th><th>Main fields</th><th>Screens</th></tr></thead>
+    <tbody>
+      <tr><td><code>co_county_popup.geojson</code></td><td>County (64)</td><td rowspan="4"><code>name</code>, <code>properties</code>, <code>any_hazard</code> (counted once); for each of <code>flood_</code>, <code>fire_</code>, <code>both_</code>: <code>properties</code>, <code>value</code>, <code>tax</code>, <code>est_residents</code>; <code>fire47_bp2011</code>, <code>fire47_bp2047</code>, <code>fire47_doubled</code>; public asset counts per type and hazard; flags <code>no_parcel_data</code>, <code>no_fema_map</code>, <code>no_values</code>, <code>value_years</code></td><td>1, 2</td></tr>
+      <tr><td><code>co_town_popup.geojson</code></td><td>Town, plus Unincorporated per county</td><td>3</td></tr>
+      <tr><td><code>co_house_popup.geojson</code></td><td>House district (65)</td><td>4</td></tr>
+      <tr><td><code>co_senate_popup.geojson</code></td><td>Senate district (35)</td><td>4</td></tr>
+      <tr><td><code>co_public_assets.geojson</code></td><td>Public asset</td><td><code>asset_type</code>, <code>name</code>, county, town, districts, and yes/no for each of the four hazards</td><td>2, 3, 4</td></tr>
+      <tr><td>Parcel tiles</td><td>Parcel</td><td><code>parcel_key</code> and one hazard class per hazard. Too big for a single GeoJSON (2.6M parcels), so it becomes a map tileset.</td><td>3</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<div class="part"><b>Part 3</b><h2>What's in, what's out</h2><p>The guardrails. If a task doesn't fit "On the map", check before starting it.</p></div>
+
+<section class="design" id="guard">
+
+  <div class="guard">
+    <div style="--c:var(--ok)"><h3>On the map</h3><ul>
+      <li>Flood today <span>(FEMA 100-year)</span></li>
+      <li>Wildfire today <span>(state hexagons)</span></li>
+      <li>Wildfire around 2047 <span>(Forest Service)</span></li>
+      <li>Flood x wildfire today <span>(both)</span></li>
+      <li>Properties, value, tax, public assets</li>
+      <li>Estimated residents, clearly labelled as an estimate</li>
+      <li>One tool: county, town (with Unincorporated), House and Senate district</li>
+    </ul></div>
+    <div style="--c:var(--f47-lite)"><h3>Not on the map</h3><ul>
+      <li>Future flood <span>(no open future floodplain for Colorado)</span></li>
+      <li>"+1 ft" flood heights</li>
+      <li>Drought and extreme heat <span>(not parcel-level data)</span></li>
+      <li>APTIM's cost of adaptation <span>(separate study)</span></li>
+      <li>Displacement groups by income <span>(too tricky at parcel level)</span></li>
+      <li>Town fact sheets</li>
+    </ul></div>
+
+  </div>
+</section>
+</div>
+
+<!-- map shapes, built by the scripts in build/ -->
+<script src="data/geo.js"></script>
+<script src="data/town.js"></script>
+<script src="data/hd.js"></script>
+<script src="scripts.js"></script>
+</body>
+</html>
